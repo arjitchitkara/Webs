@@ -1,117 +1,103 @@
-
-import { useState, useEffect } from 'react';
+//  src/components/Hero.tsx
+import { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import MotionButton from '@/components/ui/MotionButton';
+import Slideshow from '@/components/Slideshow';
+import { Link } from 'react-router-dom';            // <- for routing links
+// or:  import { Link as ScrollLink } from 'react-scroll';  // <- if you scroll to anchors
+
+const headingVariants = {
+  hidden: { opacity: 0, y: 40 },
+  show:   { opacity: 1, y: 0, transition: { duration: .8, ease: 'easeOut' } }
+};
 
 const Hero = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const headlines = ['Innovative Design', 'Building the Future', 'Expert Construction'];
 
-  const heroTexts = [
-    "Building the Future",
-    "Innovative Design",
-    "Expert Construction"
-  ];
-
+  /* headline type-writer */
   useEffect(() => {
-    setIsLoaded(true);
-    
-    const textInterval = setInterval(() => {
-      setCurrentTextIndex((prev) => (prev + 1) % heroTexts.length);
-    }, 3000);
-    
-    return () => clearInterval(textInterval);
+    const id = setInterval(() => setCurrent(i => (i + 1) % headlines.length), 3500);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
-      <div className="noise-bg"></div>
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-construction-dark z-10"></div>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover grayscale"
-        >
-          <source src="https://cdn.gpteng.co/videos/construction-timelapse.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      
-      <div className="container-custom relative z-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 
-            className={`heading-xl text-white mb-4 transition-all duration-1000 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <span className="inline-block overflow-hidden relative">
-              <span className="block">{heroTexts[currentTextIndex]}</span>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white animate-text-reveal"></span>
-            </span>
-            
-            <span className="block text-white mt-2">
-              with <span className="text-white font-bold">Excellence</span> & Innovation
-            </span>
-          </h1>
-          
-          <p 
-            className={`text-lg text-gray-300 mb-8 transition-all duration-1000 delay-300 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            A team of architects, engineers, draughtsmen, valuers, and landscape architects 
-            dedicated to turning your vision into reality with precision and expertise.
-          </p>
-          
-          <div 
-            className={`flex flex-wrap justify-center gap-4 transition-all duration-1000 delay-500 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <Button className="btn-primary cursor-grow group">
-              Explore Our Projects 
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button className="btn-outline cursor-grow">
-              Our Services
-            </Button>
-          </div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* BG slideshow */}
+      <Slideshow />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/30" />
 
-          <div 
-            className={`mt-16 flex items-center justify-center gap-8 transition-all duration-1000 delay-700 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="text-center">
-              <p className="text-3xl font-display font-bold text-white">25+</p>
-              <p className="text-sm text-gray-400">Years Experience</p>
-            </div>
-            <div className="h-12 w-px bg-gray-700"></div>
-            <div className="text-center">
-              <p className="text-3xl font-display font-bold text-white">350+</p>
-              <p className="text-sm text-gray-400">Projects Completed</p>
-            </div>
-            <div className="h-12 w-px bg-gray-700"></div>
-            <div className="text-center">
-              <p className="text-3xl font-display font-bold text-white">45+</p>
-              <p className="text-sm text-gray-400">Expert Professionals</p>
-            </div>
-          </div>
-        </div>
+      <div className="container-custom relative z-10 text-center">
+        {/* headline */}
+        <motion.h1
+          key={headlines[current]}               // <- lets F-M animate each word
+          variants={headingVariants}
+          initial="hidden"
+          animate="show"
+          className="heading-xl text-white mb-4"
+        >
+          {headlines[current]} <br />
+          <span className="font-light">with <b>Excellence&nbsp;&amp; Innovation</b></span>
+        </motion.h1>
+
+        {/* sub-text */}
+        <motion.p
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: .4 } }}
+          className="text-lg text-gray-300 max-w-3xl mx-auto mb-10"
+        >
+          A team of architects, engineers, draughtsmen, valuers and landscape architects
+          dedicated to turning your vision into reality with precision and expertise.
+        </motion.p>
+
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { delay: .75 } }}
+          className="flex flex-wrap justify-center gap-4"
+        >
+          <Link to="/projects">
+            <MotionButton
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: .95 }}
+              className="btn-primary"
+            >
+              Explore Our Projects <ArrowRight className="ml-2 h-4 w-4" />
+            </MotionButton>
+          </Link>
+
+          <Link to="/services">
+            <MotionButton
+              variant="outline"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: .95 }}
+            >
+              Our Services
+            </MotionButton>
+          </Link>
+        </motion.div>
+
+        {/* stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: 1 } }}
+          className="grid grid-cols-3 gap-6 mt-20 text-white"
+        >
+          <Stat value="25+" label="Years Experience" />
+          <Stat value="350+" label="Projects Completed" />
+          <Stat value="45+" label="Expert Professionals" />
+        </motion.div>
       </div>
-      
-      <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-        <div className="animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-white/50 flex justify-center items-start p-1">
-            <div className="w-1 h-2 bg-white rounded-full animate-pulse"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 };
+
+const Stat = ({ value, label }: { value: string; label: string }) => (
+  <div className="text-center">
+    <p className="text-4xl font-bold font-display">{value}</p>
+    <p className="text-sm text-gray-300">{label}</p>
+  </div>
+);
 
 export default Hero;
