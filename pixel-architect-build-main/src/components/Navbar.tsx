@@ -1,117 +1,93 @@
-
-import { useState, useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import Logo from './Logo';
+import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+import Logo from './Logo';          // << now resolvable!
 
-  useEffect(() => {
-    setIsLoaded(true);
-    
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+const links = [
+  { name: 'Home',     path: '/' },
+  { name: 'About',    path: '/about' },
+  { name: 'Services', path: '/services' },
+  { name: 'Projects', path: '/projects' },
+  { name: 'Team',     path: '/team' },
+  { name: 'Contact',  path: '/contact' },
+];
 
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open,     setOpen]     = useState(false);
+  const { pathname }            = useLocation();
+
+  /* shrink + blur when you scroll 40 px */
+  useLayoutEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();                           // fire once on mount
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Team', path: '/team' },
-    { name: 'Contact', path: '/contact' },
-  ];
-
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'py-3 backdrop-blur-md bg-black/80 border-b border-white/10' 
-          : 'py-6 bg-transparent'
-      }`}
+    <header
+      className={clsx(
+        'fixed inset-x-0 z-50 transition-all duration-300',
+        scrolled
+          ? 'py-2 backdrop-blur-md bg-black/70 border-b border-white/10'
+          : 'py-3'
+      )}
     >
-      <div className="container-custom flex items-center justify-between">
-        <div className={`flex items-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-          <Logo />
-        </div>
+      <nav className="container-custom flex items-center justify-between">
+        {/* ─────────────────── logo ─────────────────── */}
+        <Link to="/" className="flex items-center">
+  {/* “mix-blend-difference” is the Tailwind class for the effect you wanted */}
+  <Logo className="h-16 md:h-20 mix-blend-difference" />
+</Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
-          {navLinks.map((link, index) => (
-            <Link 
-              key={link.name} 
-              to={link.path} 
-              className={`nav-link transition-all duration-1000 delay-${index * 100} ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <Link to="/quote">
-            <Button 
-              className={`ml-4 btn-primary transition-all duration-1000 delay-600 ${
-                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-              }`}
-            >
-              Get Quote
-            </Button>
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className={`md:hidden transition-all duration-1000 delay-200 ${
-          isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-        }`}>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 focus:outline-none"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6 text-white" />
-            ) : (
-              <Menu className="h-6 w-6 text-white" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-construction-muted/95 backdrop-blur-md animate-fade-in border-t border-white/10">
-          <div className="container-custom py-4 space-y-3">
-            {navLinks.map((link) => (
+        {/* ─────────────── desktop links ─────────────── */}
+        <ul className="hidden md:flex space-x-10 text-white">
+          {links.map(l => (
+            <li key={l.name}>
               <Link
-                key={link.name}
-                to={link.path}
-                className="block py-2 px-4 text-white hover:text-gray-300 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
+                to={l.path}
+                className={clsx(
+                  'hover:text-primary transition-colors',
+                  pathname === l.path && 'text-primary-foreground font-semibold'
+                )}
               >
-                {link.name}
+                {l.name}
               </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* ─────────────── hamburger ─────────────── */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden text-white p-2"
+          aria-label="Toggle navigation"
+        >
+          {open ? <X /> : <Menu />}
+        </button>
+      </nav>
+
+      {/* ─────────────── mobile menu ─────────────── */}
+      {open && (
+        <div className="md:hidden bg-black/90 backdrop-blur-md">
+          <ul className="flex flex-col items-center py-6 space-y-4">
+            {links.map(l => (
+              <li key={l.name}>
+                <Link
+                  to={l.path}
+                  className="text-white text-lg"
+                  onClick={() => setOpen(false)}
+                >
+                  {l.name}
+                </Link>
+              </li>
             ))}
-            <Link to="/quote" className="block" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="w-full btn-primary mt-3">Get Quote</Button>
-            </Link>
-          </div>
+          </ul>
         </div>
       )}
-    </nav>
+    </header>
   );
-};
-
-export default Navbar;
+}
