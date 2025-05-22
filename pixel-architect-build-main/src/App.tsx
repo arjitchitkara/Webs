@@ -9,7 +9,7 @@ import About from "./pages/About";
 import ServicesPage from "./pages/Services";
 import ProjectsPage from "./pages/Projects";
 import TeamPage from "./pages/Team";
-import ContactPage from "./pages/Contact";
+import ContactPage from "./pages/Contactpage";
 import QuotePage from "./pages/Quote";
 import NotFound from "./pages/NotFound";
 

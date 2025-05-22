@@ -56,12 +56,12 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-6">Contact</h3>
             <ul className="space-y-4 text-gray-400">
               <li>
-                <span className="block">123 Construction Avenue</span>
-                <span className="block">Business District</span>
-                <span className="block">New York, NY 10001</span>
+                <span className="block">Chitkara Constructions</span>
+                <span className="block">Near DC office</span>
+                <span className="block">1, Commercial Building, Near, DC Office Rd, below City Point 1, The Mall, Shimla, Himachal Pradesh 171001</span>
               </li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Email: info@chitkaraconstructions.com</li>
+              <li>Phone: +91 (9816031144)</li>
+              <li>Email: chitkarashimla@gmail.com</li>
             </ul>
           </div>
         </div>

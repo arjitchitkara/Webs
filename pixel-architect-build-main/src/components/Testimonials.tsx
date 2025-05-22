@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
 const testimonials = [
   {
     id: 1,
-    name: "Robert Thompson",
+    name: "Ajay sood",
     company: "Thompson Real Estate Group",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150",
     text: "Working with this construction team was an absolute pleasure. Their attention to detail and commitment to quality exceeded our expectations. Our commercial property was completed on time and within budget.",
@@ -13,7 +13,7 @@ const testimonials = [
   },
   {
     id: 2,
-    name: "Emma Chen",
+    name: "Gaurav sood",
     company: "Chen Properties Inc.",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150",
     text: "The architectural designs were innovative and practical. The team was responsive to our feedback and made adjustments quickly. Our residential development has received numerous compliments because of their work.",
@@ -21,7 +21,7 @@ const testimonials = [
   },
   {
     id: 3,
-    name: "Marcus Johnson",
+    name: "Mr Khanna",
     company: "Johnson & Partners LLC",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150",
     text: "From concept to completion, the team demonstrated professionalism and expertise. Their engineering solutions for our complex project were ingenious, saving us both time and resources.",
@@ -29,7 +29,7 @@ const testimonials = [
   },
   {
     id: 4,
-    name: "Sophia Williams",
+    name: "Mr 65",
     company: "Williams Healthcare Services",
     image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=150&h=150",
     text: "The landscape architects transformed our hospital grounds into a healing garden that patients and staff love. Their understanding of how outdoor spaces affect wellbeing was impressive.",

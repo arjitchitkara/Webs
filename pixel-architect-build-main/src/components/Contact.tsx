@@ -1,192 +1,177 @@
-
+/*  src/components/Contact.tsx  */
 import { useState } from 'react';
-import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowRight, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const Contact = () => {
+const COMPANY_PHONE = '+91 9816031144';
+const COMPANY_MAIL  = 'chitkarashimla@gmail.com';
+
+export default function Contact() {
+  /* ----------------------- form state ----------------------- */
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
+    name: '', email: '', phone: '', subject: '', message: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  /* open mail client with all fields pre-filled */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would handle the form submission here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-    });
-    // Show success message
-    alert('Thank you for your message! We will get back to you soon.');
+
+    const qs = new URLSearchParams({
+      subject: formData.subject || 'Website enquiry',
+      body:
+        `Name: ${formData.name}\n` +
+        `Email: ${formData.email}\n` +
+        `Phone: ${formData.phone}\n\n${formData.message}`
+    }).toString();
+
+    window.location.href = `mailto:${COMPANY_MAIL}?${qs}`;
   };
+
+  /* shorthand for every input style */
+  const baseInput =
+    'w-full p-3 bg-construction-dark border border-construction-border rounded-md ' +
+    'focus:outline-none focus:border-construction-accent text-white';
 
   return (
     <section id="contact" className="section-padding bg-construction-dark">
       <div className="container-custom">
-        <div className="text-center mb-16">
-          <h2 className="heading-lg mb-4">Get in <span className="text-construction-accent">Touch</span></h2>
+
+        {/* heading --------------------------------------------------------- */}
+        <header className="text-center mb-16">
+          <h2 className="heading-lg mb-4">
+            Get in&nbsp;<span className="text-construction-accent">Touch</span>
+          </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Contact us to discuss your project or to learn more about our services
+            Contact us to discuss your project or to learn more about our services.
           </p>
-        </div>
+        </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* ------------------------- FORM ------------------------------- */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="bg-construction-muted p-8 rounded-lg border border-construction-border">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-construction-muted p-8 rounded-lg border border-construction-border"
+            >
               <h3 className="heading-md mb-6">Send us a message</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Full Name *</label>
+                  <label className="form-label">Full Name *</label>
                   <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 bg-construction-dark border border-construction-border rounded-md focus:outline-none focus:border-construction-accent text-white"
-                    placeholder="Enter your name"
+                    name="name" required placeholder="Enter your name"
+                    value={formData.name} onChange={handleChange} className={baseInput}
                   />
                 </div>
-                
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email Address *</label>
+                  <label className="form-label">Email Address *</label>
                   <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 bg-construction-dark border border-construction-border rounded-md focus:outline-none focus:border-construction-accent text-white"
-                    placeholder="Enter your email"
+                    type="email" name="email" required placeholder="Enter your email"
+                    value={formData.email} onChange={handleChange} className={baseInput}
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
+                  <label className="form-label">Phone Number</label>
                   <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full p-3 bg-construction-dark border border-construction-border rounded-md focus:outline-none focus:border-construction-accent text-white"
-                    placeholder="Enter your phone number"
+                    type="tel" name="phone" placeholder="Enter your phone number"
+                    value={formData.phone} onChange={handleChange} className={baseInput}
                   />
                 </div>
-                
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-400 mb-2">Subject *</label>
+                  <label className="form-label">Subject *</label>
                   <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 bg-construction-dark border border-construction-border rounded-md focus:outline-none focus:border-construction-accent text-white"
+                    name="subject" required value={formData.subject} onChange={handleChange}
+                    className={baseInput + ' pr-8'}
                   >
                     <option value="">Select a subject</option>
-                    <option value="Project Inquiry">Project Inquiry</option>
-                    <option value="Consultation">Consultation</option>
-                    <option value="Partnership">Partnership</option>
-                    <option value="General Question">General Question</option>
+                    <option>Project Inquiry</option>
+                    <option>Consultation</option>
+                    <option>Partnership</option>
+                    <option>General Question</option>
                   </select>
                 </div>
               </div>
-              
+
               <div className="mb-6">
-                <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Your Message *</label>
+                <label className="form-label">Your Message *</label>
                 <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={5}
-                  className="w-full p-3 bg-construction-dark border border-construction-border rounded-md focus:outline-none focus:border-construction-accent text-white resize-none"
-                  placeholder="Tell us about your project..."
+                  name="message" rows={5} required placeholder="Tell us about your project…"
+                  value={formData.message} onChange={handleChange}
+                  className={baseInput + ' resize-none'}
                 />
               </div>
-              
+
               <Button type="submit" className="btn-primary w-full md:w-auto">
-                Send Message <ArrowRight className="ml-2 h-4 w-4" />
+                Send Message <ArrowRight className="ml-2 h-4 w-4"/>
               </Button>
             </form>
           </div>
-          
-          <div>
-            <div className="bg-construction-muted p-8 rounded-lg border border-construction-border h-full">
-              <h3 className="heading-md mb-6">Contact Information</h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="mr-4 p-3 bg-construction-accent bg-opacity-10 rounded-full text-construction-accent">
-                    <Phone className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400 mb-1">Phone Number</p>
-                    <p className="text-white">+1 (555) 123-4567</p>
-                    <p className="text-white">+1 (555) 765-4321</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="mr-4 p-3 bg-construction-accent bg-opacity-10 rounded-full text-construction-accent">
-                    <Mail className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400 mb-1">Email Address</p>
-                    <p className="text-white">info@archicon.com</p>
-                    <p className="text-white">sales@archicon.com</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="mr-4 p-3 bg-construction-accent bg-opacity-10 rounded-full text-construction-accent">
-                    <MapPin className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400 mb-1">Office Location</p>
-                    <p className="text-white">123 Construction Avenue</p>
-                    <p className="text-white">New York, NY 10001</p>
-                  </div>
-                </div>
-                
-                <div className="pt-6 border-t border-construction-border">
-                  <p className="text-sm text-gray-400 mb-4">Working Hours</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <p className="text-white">Monday - Friday:</p>
-                    <p className="text-white">9:00 AM - 6:00 PM</p>
-                    <p className="text-white">Saturday:</p>
-                    <p className="text-white">10:00 AM - 4:00 PM</p>
-                    <p className="text-white">Sunday:</p>
-                    <p className="text-white">Closed</p>
-                  </div>
-                </div>
-              </div>
+
+          {/* ------------------ CONTACT INFORMATION ------------------------ */}
+          <aside className="bg-construction-muted p-8 rounded-lg border border-construction-border h-full">
+            <h3 className="heading-md mb-6">Contact Information</h3>
+
+            <InfoItem icon={Phone} label="Phone Number">
+              <a href={`tel:${COMPANY_PHONE}`} className="hover:underline text-white">
+                {COMPANY_PHONE}
+              </a>
+            </InfoItem>
+
+            <InfoItem icon={Mail} label="Email Address">
+              <a href={`mailto:${COMPANY_MAIL}`} className="hover:underline text-white">
+                {COMPANY_MAIL}
+              </a>
+            </InfoItem>
+
+            <InfoItem icon={MapPin} label="Office Location">
+              <p className="text-white">
+                1, Commercial Building, Near DC Office Rd,<br/>
+                below City Point 1, The Mall, Shimla,<br/>
+                Himachal Pradesh 171001
+              </p>
+            </InfoItem>
+
+            {/* quick-action buttons */}
+            <div className="pt-6 border-t border-construction-border space-y-4">
+              <Button asChild variant="outline" className="justify-center w-full">
+                <a href={`tel:${COMPANY_PHONE}`}><Phone className="mr-2 h-4 w-4"/>Call Us</a>
+              </Button>
+
+              <Button asChild variant="outline" className="justify-center w-full">
+                <a href={`sms:${COMPANY_PHONE}?body=${encodeURIComponent('Hello, I would like to discuss a project.')}`}>
+                  <MessageCircle className="mr-2 h-4 w-4"/>Text Us
+                </a>
+              </Button>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </section>
   );
-};
+}
 
-export default Contact;
+/* small helper component */
+function InfoItem({
+  icon: Icon, label, children
+}: { icon: React.ElementType; label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start mb-6 last:mb-0">
+      <span className="mr-4 p-3 bg-construction-accent/10 rounded-full text-construction-accent">
+        <Icon className="h-5 w-5"/>
+      </span>
+      <div>
+        <p className="text-sm text-gray-400 mb-1">{label}</p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* add once to index.css (optional) */
