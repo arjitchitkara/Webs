@@ -32,7 +32,7 @@ export default function Navbar() {
       className={clsx(
         'fixed inset-x-0 z-50 transition-all duration-300',
         scrolled
-          ? 'py-2 backdrop-blur-md bg-black/70 border-b border-white/10'
+          ? 'py-2 backdrop-blur-md bg-black/20 border-b border-white/10'
           : 'py-3'
       )}
     >

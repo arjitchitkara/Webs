@@ -26,7 +26,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* BG slideshow */}
       <Slideshow />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/30" />
 
       <div className="container-custom relative z-10 text-center">
         {/* headline */}

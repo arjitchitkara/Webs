@@ -1,4 +1,3 @@
-// src/components/Services.tsx
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import {
@@ -10,119 +9,152 @@ import {
   DialogDescription
 } from '@/components/ui/dialog';
 
+/* -------------------------------------------------
+   1)  list every picture in /public/images/services
+       (or move them and change the glob below)
+   ------------------------------------------------- */
+const allServicePics = [
+  
+  '/images/arch.jpg',
+  '/images/structure.jpg',
+  '/images/valuation.jpg',
+  '/images/interior.jpg',
+  '/images/shimla-1.jpg',
+  '/images/shimla-2.jpg'
+];
+
+/* ------------------------------------------------- */
 const servicesList = [
   {
     id: 1,
-    title: "Architecture & Landscape",
+    title: 'Architecture & Landscape',
     description:
-      "Context-sensitive design marrying modern elegance with Himalayan vernacular.",
-    icon: "🏢",
+      'Context-sensitive design marrying modern elegance with Himalayan vernacular.',
+    icon: '🏢',
+    // bg is OPTIONAL – if you omit it we’ll pick a random one
+    bg: '/images/arch.jpg',
     details:
-      "Our team crafts buildings that respect their setting in the Himalayas, balancing cutting-edge form with regional materials and techniques."
+      'Our team crafts buildings that respect their setting in the Himalayas, balancing cutting-edge form with regional materials and techniques.'
   },
   {
     id: 2,
-    title: "Structural Engineering",
+    title: 'Structural Engineering',
     description:
-      "Zone-IV earthquake-resistant detailing, fully NBC-2016 compliant.",
-    icon: "📐",
+      'Zone-IV earthquake-resistant detailing, fully NBC-2016 compliant.',
+    icon: '📐',
     details:
-      "We engineer for safety and longevity, using best-in-class analysis and detailing to exceed national seismic codes."
+      'We engineer for safety and longevity, using best-in-class analysis and detailing to exceed national seismic codes.'
   },
   {
     id: 3,
-    title: "Valuation & Advisory",
+    title: 'Valuation & Advisory',
     description:
-      "Income-Tax approved valuations and turnkey feasibility for banks & PPP hubs.",
-    icon: "💰",
+      'Income-Tax approved valuations and turnkey feasibility for banks & PPP hubs.',
+    icon: '💰',
     details:
-      "Certified valuers with deep market insight ensure you have the data and reports you need for investment, lending, or legal proceedings."
+      'Certified valuers with deep market insight ensure you have the data and reports you need for investment, lending, or legal proceedings.'
   },
   {
     id: 4,
-    title: "Interior Design",
+    title: 'Interior Design',
     description:
-      "Stylish and functional interior designs that maximize space and reflect your unique preferences.",
-    icon: "🪑",
+      'Stylish and functional interiors that maximise space and reflect your unique preferences.',
+    icon: '🪑',
     details:
-      "Our interior design services transform indoor spaces to maximize functionality, aesthetic appeal, and user experience. From space planning and material selection to furniture and lighting design, we create interior environments that inspire and delight."
+      'From space planning and material selection to lighting design, we create interior environments that inspire and delight.'
   },
   {
     id: 5,
-    title: "Site Supervision",
+    title: 'Site Supervision',
     description:
-      "Dedicated on-site supervision ensuring construction quality and safety.",
-    icon: "👷‍♂️",
+      'Dedicated on-site supervision ensuring construction quality and safety.',
+    icon: '👷‍♂️',
     details:
-      "Our site supervision services ensure every phase of construction is executed to the highest standards. We coordinate trades, enforce safety protocols, and perform quality checks to keep your project on track and within specification."
+      'We coordinate trades, enforce safety protocols, and perform quality checks to keep your project on track and within specification.'
   },
   {
-  id: 6,
-  title: "Project Feasibility & Planning",
-  description:
-    "Assessing project viability, budgeting, approvals, and phasing before construction begins.",
-  icon: "📝",
-  details:
-    "We guide you from idea to implementation—through site analysis, regulatory checks, cost planning, and timeline structuring. Our feasibility services help you make informed decisions with full clarity before you build."
-}
+    id: 6,
+    title: 'Project Feasibility & Planning',
+    description:
+      'Assessing viability, budgeting, approvals, and phasing before construction begins.',
+    icon: '📝',
+    details:
+      'We guide you from idea to implementation through site analysis, regulatory checks, cost planning, and realistic scheduling.'
+  }
 ];
 
-const ServiceCard = ({ service, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
+/* ─────────────────────────────────────────────── */
+
+function ServiceCard({
+  service,
+  index
+}: {
+  service: (typeof servicesList)[0];
+  index: number;
+}) {
+  const [hover, setHover] = useState(false);
+
+  /* pick a photo – explicit one if supplied, otherwise a pseudo-random one */
+  const bgPhoto =
+    service.bg ?? allServicePics[index % allServicePics.length];
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <div
-          className={`bg-construction-muted p-8 rounded-lg 
-                      border border-white/20 transition-all duration-500 
-                      cursor-grow hover:border-white/30 transform 
-                      ${isHovered ? '-translate-y-1' : 'translate-y-0'}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
           style={{
-            opacity: 100,
-            animation: 'fade-in 0.5s ease-out forwards',
-            animationDelay: `${index * 150}ms`
+            backgroundImage: `url(${bgPhoto})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
+          className={`relative overflow-hidden rounded-xl p-8
+                      border border-white/20 cursor-pointer
+                      transition-all duration-500
+                      ${hover ? '-translate-y-1 shadow-lg' : ''}
+                      before:absolute before:inset-0 before:bg-black/60
+                      before:transition-opacity
+                      ${hover ? 'before:opacity-40' : 'before:opacity-60'}`}
         >
-          <div className="text-4xl mb-4">{service.icon}</div>
-          <h3 className="heading-md mb-2 text-white">{service.title}</h3>
-          <p className="text-gray-400 mb-4">{service.description}</p>
-          <div className="inline-flex items-center text-white font-medium group">
-            Learn more
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <div className="relative z-10 space-y-4 text-white">
+            <div className="text-4xl">{service.icon}</div>
+            <h3 className="font-semibold text-lg leading-snug">
+              {service.title}
+            </h3>
+            <p className="text-sm text-gray-300">{service.description}</p>
+
+            <span className="inline-flex items-center font-medium">
+              Learn more
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </span>
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="bg-construction-muted border border-white/20 text-white rounded-lg">
+
+      <DialogContent className="bg-construction-muted border border-white/20 rounded-lg text-white backdrop-blur">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
-            {service.title}
-          </DialogTitle>
+          <DialogTitle>{service.title}</DialogTitle>
           <DialogDescription className="text-gray-400">
             {service.description}
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-4 text-gray-300">{service.details}</div>
+        <p className="mt-4 text-gray-300">{service.details}</p>
       </DialogContent>
     </Dialog>
   );
-};
+}
+
+/* ─────────────────────────────────────────────── */
 
 export default function Services() {
   return (
     <section id="services" className="section-padding bg-construction-dark relative">
-      {/* subtle overlay so cards pop */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/[0.15] to-black/0" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/30 to-black/0" />
 
       <div className="container-custom relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="heading-lg text-white">Services</h2>
-        </div>
+        <h2 className="heading-lg text-center text-white mb-12">Services</h2>
 
-        {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {servicesList.map((svc, i) => (
             <ServiceCard key={svc.id} service={svc} index={i} />
