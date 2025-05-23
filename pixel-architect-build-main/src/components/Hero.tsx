@@ -4,19 +4,19 @@ import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import MotionButton from '@/components/ui/MotionButton';
 import Slideshow from '@/components/Slideshow';
-import { Link } from 'react-router-dom';            // <- for routing links
-// or:  import { Link as ScrollLink } from 'react-scroll';  // <- if you scroll to anchors
+import AnimatedLogo from '@/components/AnimatedLogo';
+import { Link } from 'react-router-dom';
 
 const headingVariants = {
   hidden: { opacity: 0, y: 40 },
   show:   { opacity: 1, y: 0, transition: { duration: .8, ease: 'easeOut' } }
 };
 
-const Hero = () => {
-  const [current, setCurrent] = useState(0);
+export default function Hero() {
   const headlines = ['Innovative Design', 'Building the Future', 'Expert Construction'];
+  const [current, setCurrent] = useState(0);
 
-  /* headline type-writer */
+  // rotate headline every 3.5 s
   useEffect(() => {
     const id = setInterval(() => setCurrent(i => (i + 1) % headlines.length), 3500);
     return () => clearInterval(id);
@@ -24,24 +24,31 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* BG slideshow */}
+      {/* 1️⃣ background slideshow */}
       <Slideshow />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black10" />
 
-      <div className="container-custom relative z-10 text-center">
+      {/* 2️⃣ foreground content */}
+      <div className="container-custom relative z-10 flex flex-col items-center">
+
+        {/* ─── animated logo ─── */}
+        <AnimatedLogo className="h-32 md:h-40 mx-auto mb-10" />
+
         {/* headline */}
         <motion.h1
-          key={headlines[current]}               // <- lets F-M animate each word
+          key={headlines[current]}
           variants={headingVariants}
           initial="hidden"
           animate="show"
           className="heading-xl text-white mb-4"
         >
           {headlines[current]} <br />
-          <span className="font-light">with <b>Excellence&nbsp;&amp; Innovation</b></span>
+          <span className="font-light">
+            with <b>Excellence&nbsp;&amp; Innovation</b>
+          </span>
         </motion.h1>
 
-        {/* sub-text */}
+        {/* sub-copy */}
         <motion.p
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0, transition: { delay: .4 } }}
@@ -58,11 +65,7 @@ const Hero = () => {
           className="flex flex-wrap justify-center gap-4"
         >
           <Link to="/projects">
-            <MotionButton
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: .95 }}
-              className="btn-primary"
-            >
+            <MotionButton whileHover={{ scale: 1.05 }} whileTap={{ scale: .95 }} className="btn-primary">
               Explore Our Projects <ArrowRight className="ml-2 h-4 w-4" />
             </MotionButton>
           </Link>
@@ -91,7 +94,7 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+}
 
 const Stat = ({ value, label }: { value: string; label: string }) => (
   <div className="text-center">
@@ -99,5 +102,3 @@ const Stat = ({ value, label }: { value: string; label: string }) => (
     <p className="text-sm text-gray-300">{label}</p>
   </div>
 );
-
-export default Hero;
